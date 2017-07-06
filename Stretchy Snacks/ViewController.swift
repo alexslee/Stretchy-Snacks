@@ -8,8 +8,18 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+// MARK: constants
+struct constants {
+    
+    static let expandedHeight = CGFloat(floatLiteral: 200.0)
+    
+    static let contractedHeight = CGFloat(floatLiteral: 64.0)
+    
+    static let plusSignRotation = CGFloat(floatLiteral: Double.pi/4)
+}
 
+class ViewController: UIViewController {
+    var isExpanded = false
     @IBOutlet weak var customNavBar: UIView!
     @IBOutlet weak var navBarButton: UIButton!
     
@@ -19,20 +29,41 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     @IBAction func plusIconPressed(_ sender: Any) {
+        let sent = sender as! UIButton
         print("Plus icon pressed")
-        self.customNavBarHeight.constant = 200
-        UIView.animate(withDuration: 0.8, animations: {
-//            self.customNavBarHeight.constant = 200
-            self.view.layoutIfNeeded()
-        }, completion: nil)
+        if (isExpanded) {
+            
+            self.customNavBarHeight.constant = constants.contractedHeight
+            
+            sent.transform = CGAffineTransform(rotationAngle: constants.plusSignRotation)
+            
+            UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: { (value: Bool) in
+                self.isExpanded = !self.isExpanded
+            })
+            
+        } else {
+            
+            self.customNavBarHeight.constant = constants.expandedHeight
+            
+            sent.transform = CGAffineTransform(rotationAngle: constants.plusSignRotation)
+            
+            UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
+                self.view.layoutIfNeeded()
+            }, completion: { (value: Bool) in
+                self.isExpanded = !self.isExpanded
+            })
+            
+        }
     }
-
+    
 }
 
