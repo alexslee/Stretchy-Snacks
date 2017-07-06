@@ -42,7 +42,7 @@ class ViewController: UIViewController {
             
             self.customNavBarHeight.constant = constants.contractedHeight
             
-            sent.transform = CGAffineTransform(rotationAngle: constants.plusSignRotation)
+            sent.transform = CGAffineTransform(rotationAngle: constants.plusSignRotation * 2)
             
             UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
                 self.view.layoutIfNeeded()
