@@ -16,6 +16,8 @@ struct Constants {
     static let contractedHeight = CGFloat(floatLiteral: 64.0)
     
     static let plusSignRotation = CGFloat(floatLiteral: Double.pi/4)
+    
+    static let buttonWidthFactor = CGFloat(floatLiteral: 6.0)
 }
 
 // MARK: ViewController
@@ -58,8 +60,8 @@ class ViewController: UIViewController {
             let button = UIButton()
             button.translatesAutoresizingMaskIntoConstraints = false
             stackView.addArrangedSubview(button)
-            button.heightAnchor.constraint(equalToConstant: 100.0).isActive = true
-            button.widthAnchor.constraint(equalToConstant: self.customNavBar.frame.size.width / CGFloat(floatLiteral:5.5)).isActive = true
+            button.heightAnchor.constraint(equalToConstant: self.customNavBar.frame.size.height).isActive = true
+            button.widthAnchor.constraint(equalToConstant: (self.customNavBar.frame.size.width - self.navBarButton.frame.size.width) / Constants.buttonWidthFactor).isActive = true
             button.setImage(snack, for: .normal)
             
         }
