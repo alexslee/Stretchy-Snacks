@@ -8,8 +8,8 @@
 
 import UIKit
 
-// MARK: constants
-struct constants {
+// MARK: Constants
+struct Constants {
     
     static let expandedHeight = CGFloat(floatLiteral: 200.0)
     
@@ -18,16 +18,52 @@ struct constants {
     static let plusSignRotation = CGFloat(floatLiteral: Double.pi/4)
 }
 
+// MARK: ViewController
 class ViewController: UIViewController {
-    var isExpanded = false
+    
+    // MARK: properties
     @IBOutlet weak var customNavBar: UIView!
+    
     @IBOutlet weak var navBarButton: UIButton!
     
     @IBOutlet weak var customNavBarHeight: NSLayoutConstraint!
     
+    var isExpanded = false
+    var stackView = UIStackView()
+    var stackSnacks: [UIImage] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        stackSnacks = [ #imageLiteral(resourceName: "oreos"),
+                        #imageLiteral(resourceName: "pizza_pockets"),
+                        #imageLiteral(resourceName: "pop_tarts"),
+                        #imageLiteral(resourceName: "popsicle"),
+                        #imageLiteral(resourceName: "ramen")
+        ]
+        stackView.isHidden = true
+        stackView.axis = .horizontal
+        stackView.distribution = .equalSpacing
+        stackView.alignment = .center
+        stackView.spacing = 5.0
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        customNavBar.addSubview(stackView)
+        
+        stackView.bottomAnchor.constraint(equalTo: customNavBar.bottomAnchor).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: customNavBar.centerXAnchor).isActive = true
+        
+        for snack in stackSnacks {
+            let button = UIButton()
+            button.translatesAutoresizingMaskIntoConstraints = false
+            stackView.addArrangedSubview(button)
+            button.heightAnchor.constraint(equalToConstant: 100.0).isActive = true
+            button.widthAnchor.constraint(equalToConstant: self.customNavBar.frame.size.width / CGFloat(floatLiteral:5.5)).isActive = true
+            button.setImage(snack, for: .normal)
+            
+        }
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -40,9 +76,11 @@ class ViewController: UIViewController {
         print("Plus icon pressed")
         if (isExpanded) {
             
-            self.customNavBarHeight.constant = constants.contractedHeight
+            self.customNavBarHeight.constant = Constants.contractedHeight
             
-            sent.transform = CGAffineTransform(rotationAngle: constants.plusSignRotation * 2)
+            sent.transform = CGAffineTransform(rotationAngle: Constants.plusSignRotation * 2)
+            
+            stackView.isHidden = true
             
             UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
                 self.view.layoutIfNeeded()
@@ -52,9 +90,11 @@ class ViewController: UIViewController {
             
         } else {
             
-            self.customNavBarHeight.constant = constants.expandedHeight
+            self.customNavBarHeight.constant = Constants.expandedHeight
             
-            sent.transform = CGAffineTransform(rotationAngle: constants.plusSignRotation)
+            sent.transform = CGAffineTransform(rotationAngle: Constants.plusSignRotation)
+            
+            stackView.isHidden = false
             
             UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
                 self.view.layoutIfNeeded()
