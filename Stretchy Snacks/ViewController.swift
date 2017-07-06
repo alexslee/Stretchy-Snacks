@@ -19,7 +19,9 @@ struct Constants {
     
     static let buttonWidthFactor = CGFloat(floatLiteral: 6.0)
     
-    enum buttonTags:String{
+    static let navLabelOffset = CGFloat(floatLiteral: 40.0)
+    
+    enum buttonTags:String {
         case Oreos = "Oreos"
         case PizzaPockets = "Pizza Pockets"
         case PopTarts = "Pop Tarts"
@@ -41,9 +43,16 @@ class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var isExpanded = false
+    
     var stackView = UIStackView()
+    
+    var navLabel = UILabel()
+    
     var stackSnacks: [UIImage]!
+    
     var snacksList:[String] = []
+    
+    //MARK: UIViewController methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,29 +64,7 @@ class ViewController: UIViewController {
                         #imageLiteral(resourceName: "ramen")
         ]
         
-        //MARK: - stack view configuration
-        stackView.isHidden = true
-        stackView.axis = .horizontal
-        stackView.distribution = .equalSpacing
-        stackView.alignment = .center
-        stackView.spacing = 5.0
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        customNavBar.addSubview(stackView)
-        
-        stackView.bottomAnchor.constraint(equalTo: customNavBar.bottomAnchor).isActive = true
-        stackView.centerXAnchor.constraint(equalTo: customNavBar.centerXAnchor).isActive = true
-        
-        for snack in stackSnacks {
-            let button = UIButton()
-            button.translatesAutoresizingMaskIntoConstraints = false
-            stackView.addArrangedSubview(button)
-            button.heightAnchor.constraint(equalToConstant: self.customNavBar.frame.size.height).isActive = true
-            button.widthAnchor.constraint(equalToConstant: (self.customNavBar.frame.size.width - self.navBarButton.frame.size.width) / Constants.buttonWidthFactor).isActive = true
-            button.setImage(snack, for: .normal)
-            button.tag = stackSnacks.index(of: snack)!
-            button.addTarget(self, action: #selector(addSnackToList(sender:)), for: .touchUpInside)
-        }
+        configureNavBarSubViews()
         
         self.tableView.delegate = self
         self.tableView.dataSource = self
@@ -122,28 +109,54 @@ class ViewController: UIViewController {
             
             self.customNavBarHeight.constant = Constants.contractedHeight
             
-            sent.transform = CGAffineTransform(rotationAngle: Constants.plusSignRotation * 2)
+            //find and undo the vertical offset on the navbar label
+            for constraint in navLabel.constraints {
+                if constraint.identifier == "NavLabelVerticalConstraint" {
+                    constraint.constant -= Constants.navLabelOffset
+                }
+            }
             
             stackView.isHidden = true
             
-            UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
-                self.view.layoutIfNeeded()
-            }, completion: { (value: Bool) in
-                self.isExpanded = !self.isExpanded
+            UIView.animate(withDuration: 1.0,
+                           delay: 0.0,
+                           usingSpringWithDamping: 0.5,
+                           initialSpringVelocity: 1.0,
+                           options: .curveEaseInOut,
+                           animations: {
+                            //rotate the plus sign, and perform the spring effect on the nav bar
+                            sent.transform = CGAffineTransform(rotationAngle: Constants.plusSignRotation * 2)
+                            self.view.layoutIfNeeded()
+            },
+                           completion: { (value: Bool) in
+                            self.isExpanded = !self.isExpanded
             })
             
         } else {
             
             self.customNavBarHeight.constant = Constants.expandedHeight
             
-            sent.transform = CGAffineTransform(rotationAngle: Constants.plusSignRotation)
+            //find and adjust the vertical offset on the navbar label
+            for constraint in navLabel.constraints {
+                if constraint.identifier == "NavLabelVerticalConstraint" {
+                    constraint.constant += Constants.navLabelOffset
+                }
+            }
             
             stackView.isHidden = false
             
-            UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 1.0, options: .curveEaseInOut, animations: {
-                self.view.layoutIfNeeded()
-            }, completion: { (value: Bool) in
-                self.isExpanded = !self.isExpanded
+            UIView.animate(withDuration: 1.0,
+                           delay: 0.0,
+                           usingSpringWithDamping: 0.5,
+                           initialSpringVelocity: 1.0,
+                           options: .curveEaseInOut,
+                           animations: {
+                            //rotate the plus sign, and perform the spring effect on the nav bar
+                            sent.transform = CGAffineTransform(rotationAngle: Constants.plusSignRotation)
+                            self.view.layoutIfNeeded()
+            },
+                           completion: { (value: Bool) in
+                            self.isExpanded = !self.isExpanded
             })
             
         }
@@ -169,3 +182,65 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+//MARK: - configuring subviews
+extension ViewController {
+    
+    func configureNavBarSubViews () {
+        configureStackView()
+        configureSnackButtons()
+        configureNavLabel()
+    }
+    
+    func configureStackView () {
+        stackView.isHidden = true
+        stackView.axis = .horizontal
+        stackView.distribution = .equalSpacing
+        stackView.alignment = .center
+        stackView.spacing = 5.0
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        customNavBar.addSubview(stackView)
+        
+        stackView.bottomAnchor.constraint(equalTo: customNavBar.bottomAnchor).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: customNavBar.centerXAnchor).isActive = true
+        
+        return
+    }
+    
+    func configureSnackButtons () {
+        for snack in stackSnacks {
+            let button = UIButton()
+            button.translatesAutoresizingMaskIntoConstraints = false
+            stackView.addArrangedSubview(button)
+            
+            button.heightAnchor.constraint(equalToConstant: self.customNavBar.frame.size.height).isActive = true
+            button.widthAnchor.constraint(equalToConstant: (self.customNavBar.frame.size.width - self.navBarButton.frame.size.width) / Constants.buttonWidthFactor).isActive = true
+            
+            button.setImage(snack, for: .normal)
+            button.tag = stackSnacks.index(of: snack)!
+            button.addTarget(self, action: #selector(addSnackToList(sender:)), for: .touchUpInside)
+        }
+        
+        return
+    }
+    
+    func configureNavLabel () {
+        navLabel.text = "SNACKS"
+        navLabel.font = UIFont.systemFont(ofSize: 20.0)
+        customNavBar.addSubview(navLabel)
+        navLabel.translatesAutoresizingMaskIntoConstraints = false
+        navLabel.centerXAnchor.constraint(equalTo: customNavBar.centerXAnchor).isActive = true
+        
+        let constraint = NSLayoutConstraint(item: navLabel,
+                                            attribute: .centerY,
+                                            relatedBy: .equal,
+                                            toItem: customNavBar,
+                                            attribute: .centerY,
+                                            multiplier: 1.0,
+                                            constant: 0.0)
+        constraint.identifier = "NavLabelVerticalConstraint"
+        constraint.isActive = true
+        
+        return
+    }
+}
