@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Stretchy_Snacks" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vqm-Vo-O2U">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="64"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ySN-jU-RvM">
+                                        <rect key="frame" x="337" y="14" width="30" height="42"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="＋"/>
+                                        <connections>
+                                            <action selector="plusIconPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="aym-jh-DSX"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.8666666666666667" green="0.8666666666666667" blue="0.8666666666666667" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="IBr-Mh-DGg"/>
+                                    <constraint firstAttribute="bottom" secondItem="ySN-jU-RvM" secondAttribute="bottom" constant="8" id="WSO-1I-Zca"/>
+                                    <constraint firstAttribute="trailing" secondItem="ySN-jU-RvM" secondAttribute="trailing" constant="8" id="wgB-aN-fPh"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="Vqm-Vo-O2U" secondAttribute="trailing" id="Bsa-zP-h56"/>
+                            <constraint firstItem="Vqm-Vo-O2U" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="Nmh-cU-pke"/>
+                            <constraint firstItem="Vqm-Vo-O2U" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="sBm-pr-W2u"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="customNavBar" destination="Vqm-Vo-O2U" id="WqR-5o-kQq"/>
+                        <outlet property="navBarButton" destination="ySN-jU-RvM" id="mTq-q2-sf2"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+    </scenes>
+</document>
