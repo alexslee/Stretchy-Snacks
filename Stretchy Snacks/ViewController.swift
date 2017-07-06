@@ -18,6 +18,14 @@ struct Constants {
     static let plusSignRotation = CGFloat(floatLiteral: Double.pi/4)
     
     static let buttonWidthFactor = CGFloat(floatLiteral: 6.0)
+    
+    enum buttonTags:String{
+        case Oreos = "Oreos"
+        case PizzaPockets = "Pizza Pockets"
+        case PopTarts = "Pop Tarts"
+        case Popsicle = "Popsicle"
+        case Ramen = "Ramen"
+    }
 }
 
 // MARK: ViewController
@@ -30,13 +38,15 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var customNavBarHeight: NSLayoutConstraint!
     
+    @IBOutlet weak var tableView: UITableView!
+    
     var isExpanded = false
     var stackView = UIStackView()
-    var stackSnacks: [UIImage] = []
+    var stackSnacks: [UIImage]!
+    var snacksList:[String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
         stackSnacks = [ #imageLiteral(resourceName: "oreos"),
                         #imageLiteral(resourceName: "pizza_pockets"),
@@ -44,6 +54,8 @@ class ViewController: UIViewController {
                         #imageLiteral(resourceName: "popsicle"),
                         #imageLiteral(resourceName: "ramen")
         ]
+        
+        //MARK: - stack view configuration
         stackView.isHidden = true
         stackView.axis = .horizontal
         stackView.distribution = .equalSpacing
@@ -63,15 +75,45 @@ class ViewController: UIViewController {
             button.heightAnchor.constraint(equalToConstant: self.customNavBar.frame.size.height).isActive = true
             button.widthAnchor.constraint(equalToConstant: (self.customNavBar.frame.size.width - self.navBarButton.frame.size.width) / Constants.buttonWidthFactor).isActive = true
             button.setImage(snack, for: .normal)
-            
+            button.tag = stackSnacks.index(of: snack)!
+            button.addTarget(self, action: #selector(addSnackToList(sender:)), for: .touchUpInside)
         }
         
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    // MARK: snack button method
+    
+    func addSnackToList(sender: UIButton) {
+        switch sender.tag {
+        case Constants.buttonTags.Oreos.hashValue:
+            snacksList.append(Constants.buttonTags.Oreos.rawValue)
+            break
+        case Constants.buttonTags.PizzaPockets.hashValue:
+            snacksList.append(Constants.buttonTags.PizzaPockets.rawValue)
+            break
+        case Constants.buttonTags.PopTarts.hashValue:
+            snacksList.append(Constants.buttonTags.PopTarts.rawValue)
+            break
+        case Constants.buttonTags.Popsicle.hashValue:
+            snacksList.append(Constants.buttonTags.Popsicle.rawValue)
+            break
+        case Constants.buttonTags.Ramen.hashValue:
+            snacksList.append(Constants.buttonTags.Ramen.rawValue)
+            break
+        default:
+            break
+        }
+        tableView.reloadData()
+    }
+    
+    // MARK: plus button action
     
     @IBAction func plusIconPressed(_ sender: Any) {
         let sent = sender as! UIButton
@@ -107,5 +149,23 @@ class ViewController: UIViewController {
         }
     }
     
+}
+
+// MARK: UITableViewDelegate + DataSource
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return snacksList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        cell.textLabel?.text = snacksList[indexPath.row]
+        return cell
+    }
 }
 
