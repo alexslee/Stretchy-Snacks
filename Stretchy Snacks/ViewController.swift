@@ -13,6 +13,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var customNavBar: UIView!
     @IBOutlet weak var navBarButton: UIButton!
     
+    @IBOutlet weak var customNavBarHeight: NSLayoutConstraint!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -25,6 +27,11 @@ class ViewController: UIViewController {
 
     @IBAction func plusIconPressed(_ sender: Any) {
         print("Plus icon pressed")
+        self.customNavBarHeight.constant = 200
+        UIView.animate(withDuration: 0.8, animations: {
+//            self.customNavBarHeight.constant = 200
+            self.view.layoutIfNeeded()
+        }, completion: nil)
     }
 
 }

@@ -50,6 +50,7 @@
                     </view>
                     <connections>
                         <outlet property="customNavBar" destination="Vqm-Vo-O2U" id="WqR-5o-kQq"/>
+                        <outlet property="customNavBarHeight" destination="IBr-Mh-DGg" id="4uE-WU-6tT"/>
                         <outlet property="navBarButton" destination="ySN-jU-RvM" id="mTq-q2-sf2"/>
                     </connections>
                 </viewController>
